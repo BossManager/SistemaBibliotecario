@@ -10,10 +10,17 @@ public class ConnectionFactory {
 
     public static Connection getConnection() {
         try {
-            return DriverManager.getConnection("jdbc:mysql://localhost/biblioteca?autoReconnect=true&useSSL=false", "root", "123456789");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
         }
+        try{
+
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/biblioteca?useTimezone=true&serverTimezone=UTC", "root", "123456789");
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+
     }
 
     public static void fechaConexao(Connection conn) {
@@ -70,5 +77,10 @@ public class ConnectionFactory {
         } catch (Exception e) {
             System.out.println("N�o foi poss�vel fechar o ResultSet " + e.getMessage());
         }
+    }
+    public static void main(String[] args) {
+        Connection con = ConnectionFactory.getConnection();
+        System.out.println("Conexao bem sucedida");
+        ConnectionFactory.fechaConexao(con);
     }
 }
